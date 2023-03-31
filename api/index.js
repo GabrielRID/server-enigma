@@ -33,6 +33,10 @@ sockets.on('connection', (socket) => {
         refreshPlayers()
     })
 
+    socket.on('SendMessage', (message) => {
+        sendMessage(game.players[socket.id], message)
+    })
+
     socket.on('CreateRoom', () => {
         socket.join(socket.id)
 
@@ -58,6 +62,46 @@ sockets.on('connection', (socket) => {
 
         refreshPlayers()
         refreshRooms()
+    })
+
+    socket.on('JoinRoom', (roomId) => {
+        socket.join(roomId)
+        const room = game.rooms[roomId]
+        let playerNumber = 'player'
+        for (let i = 1; i <= 4; i++) {
+            if (room[`player${i}`] === socket.id) {
+                playerNumber += i
+                break
+            }
+        }
+        room[playerNumber] = socket.id
+        game.players[socket.id].room = roomId
+
+        if(room.player1 && room.player2 && room.player3 && room.player4) {
+            game.match[roomId] = {
+                gameConfig,
+                player1: {
+                    ready: false,
+                    score: 2000
+                },
+                player2: {
+                    ready: false,
+                    score: 2000
+                },
+                player3: {
+                    ready: false,
+                    score: 2000
+                },
+                player4: {
+                    ready: false,
+                    score: 2000
+                },
+                time: 1200
+            }
+            gameInProgress(roomId)
+        }
+
+        console.log(`${game.players[socket.id].name} entrou na sala`)
     })
 
 })
@@ -97,6 +141,10 @@ const leaveRoom = (socket) => {
         refreshMatch(roomId)
 
     }
+}
+
+const sendMessage = (player, message) => {
+    sockets.emit("ReceiveMessage", `${player.name}: ${message}`)
 }
 
 const refreshPlayers = () => {
