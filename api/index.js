@@ -159,7 +159,13 @@ const refreshMatch = (roomId) => {
     sockets.to(roomId).emit('MatchRefresh', game.match[roomId] || {})
 }
 
-app.get("/", (req, res) => res.send("Rodando"))
+app.get("/", (req, res) => res.json({
+    sucess: true,
+    message: 'Sucesso'
+}))
+
+
+
 const port = 4000
 server.listen(port, () => console.log(`Server rodando na porta ${port}`))
 
