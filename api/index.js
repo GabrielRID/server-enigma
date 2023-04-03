@@ -76,25 +76,30 @@ sockets.on('connection', (socket) => {
         }
         room[playerNumber] = socket.id
         game.players[socket.id].room = roomId
+        let colors = [{red: false}, {yellow: false}, {blue: false}, {green: false}]
 
-        if(room.player1 && room.player2 && room.player3 && room.player4) {
+        if (room.player1 && room.player2 && room.player3 && room.player4) {
             game.match[roomId] = {
                 gameConfig,
                 player1: {
                     ready: false,
-                    score: 2000
+                    score: 2000,
+                    color: colors
                 },
                 player2: {
                     ready: false,
-                    score: 2000
+                    score: 2000,
+                    color: colors
                 },
                 player3: {
                     ready: false,
-                    score: 2000
+                    score: 2000,
+                    color: colors
                 },
                 player4: {
                     ready: false,
-                    score: 2000
+                    score: 2000,
+                    color: colors
                 },
                 time: 1200
             }
@@ -125,15 +130,15 @@ const leaveRoom = (socket) => {
             }
         }
 
-        if(match) {
+        if (match) {
             match[playerNumber] = undefined
             match.status = 'END'
             match.message = `O jogador ${game.players[socketId].name} desconectou`
         }
 
-        if(!room.player1 && !room.player2 && !room.player3 && !room.player4) {
+        if (!room.player1 && !room.player2 && !room.player3 && !room.player4) {
             delete game.rooms[socketId]
-            if(match) {
+            if (match) {
                 delete game.match[roomId]
             }
         }
