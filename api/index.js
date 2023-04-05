@@ -20,12 +20,16 @@ const game = {
     match: {}
 }
 
+// Vai ser retirado posteriormente e colocado dentro das rooms, pois é lá que as validações devem ser feitas
+let contador = 0
+
 // Aqui é onde vai ser elaborado a parte de código de enviar e receber no servidor
 sockets.on('connection', (socket) => {
     console.log(`${socket.id} conectado`)
 
     const name = 'Player_' + socket.id.substring(0, 5)
-    game.players[socket.id] = { name }
+    let color = ""
+    game.players[socket.id] = { name, color }
     refreshPlayers()
 
     socket.on('disconnect', () => {
@@ -76,7 +80,6 @@ sockets.on('connection', (socket) => {
         }
         room[playerNumber] = socket.id
         game.players[socket.id].room = roomId
-        let colors = [{red: false}, {yellow: false}, {blue: false}, {green: false}]
 
         if (room.player1 && room.player2 && room.player3 && room.player4) {
             game.match[roomId] = {
@@ -84,29 +87,35 @@ sockets.on('connection', (socket) => {
                 player1: {
                     ready: false,
                     score: 2000,
-                    color: colors
+                    color: ''
                 },
                 player2: {
                     ready: false,
                     score: 2000,
-                    color: colors
+                    color: ''
                 },
                 player3: {
                     ready: false,
                     score: 2000,
-                    color: colors
+                    color: ''
                 },
                 player4: {
                     ready: false,
                     score: 2000,
-                    color: colors
+                    color: ''
                 },
                 time: 1200
             }
             gameInProgress(roomId)
         }
 
+        
         console.log(`${game.players[socket.id].name} entrou na sala`)
+    })
+
+    socket.on('ReadyPlayer', () => {
+        contador++;
+        refreshReadyPlayers(contador)
     })
 
 })
@@ -164,12 +173,14 @@ const refreshMatch = (roomId) => {
     sockets.to(roomId).emit('MatchRefresh', game.match[roomId] || {})
 }
 
+const refreshReadyPlayers = (contador) => {
+    sockets.emit("ReadyPlayersRefresh", contador)
+}
+
 app.get("/", (req, res) => res.json({
     sucess: true,
     message: 'Sucesso'
 }))
-
-
 
 const port = 4000
 server.listen(port, () => console.log(`Server rodando na porta ${port}`))
