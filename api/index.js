@@ -109,13 +109,18 @@ sockets.on('connection', (socket) => {
             gameInProgress(roomId)
         }
 
-        
+
         console.log(`${game.players[socket.id].name} entrou na sala`)
     })
 
     socket.on('ReadyPlayer', () => {
         contador++;
-        refreshReadyPlayers(contador)
+        if(contador < 4) {
+            refreshReadyPlayers(contador)
+        } else {
+            contador=0
+            console.log("Começou o jogo")
+        }
     })
 
 })
