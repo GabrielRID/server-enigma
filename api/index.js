@@ -109,6 +109,8 @@ sockets.on('connection', (socket) => {
             gameInProgress(roomId)
         }
 
+        socket.on()
+
 
         console.log(`${game.players[socket.id].name} entrou na sala`)
     })
@@ -117,10 +119,11 @@ sockets.on('connection', (socket) => {
         contador++;
         if(contador < 4) {
             refreshReadyPlayers(contador)
-        } else {
+        } else if (contador === 4) {
             contador=0
             console.log("Começou o jogo")
-        }
+            everyoneIsReady()
+        } 
     })
 
 })
@@ -158,7 +161,6 @@ const leaveRoom = (socket) => {
         }
 
         refreshMatch(roomId)
-
     }
 }
 
@@ -180,6 +182,11 @@ const refreshMatch = (roomId) => {
 
 const refreshReadyPlayers = (contador) => {
     sockets.emit("ReadyPlayersRefresh", contador)
+}
+
+const everyoneIsReady = () => {
+    console.log("Deu true")
+    sockets.emit("EveryoneIsReady", true)
 }
 
 app.get("/", (req, res) => res.json({
