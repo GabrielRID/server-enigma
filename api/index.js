@@ -195,6 +195,6 @@ app.get("/", (req, res) => res.json({
 }))
 
 const port = 4000
-server.listen(port, () => console.log(`Server rodando na porta ${port}`))
+server.listen(process.env.PORT || port, () => console.log(`Server rodando na porta ${port}`))
 
 
