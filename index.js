@@ -73,9 +73,9 @@ sockets.on('connection', (socket) => {
         const room = game.rooms[roomId]
         let playerNumber = 'player'
         for (let i = 1; i <= 4; i++) {
-            if (room[`player${i}`] === socket.id) {
-                playerNumber += i
-                break
+            if (!room[`player${i}`]) {
+                playerNumber += i;
+                break;
             }
         }
         room[playerNumber] = socket.id
@@ -83,7 +83,6 @@ sockets.on('connection', (socket) => {
 
         if (room.player1 && room.player2 && room.player3 && room.player4) {
             game.match[roomId] = {
-                gameConfig,
                 player1: {
                     ready: false,
                     score: 2000,
@@ -106,11 +105,9 @@ sockets.on('connection', (socket) => {
                 },
                 time: 1200
             }
-            gameInProgress(roomId)
+            console.log("O jogo vai começar")
+            // gameInProgress(roomId)
         }
-
-        socket.on()
-
 
         console.log(`${game.players[socket.id].name} entrou na sala`)
     })
@@ -142,8 +139,9 @@ const leaveRoom = (socket) => {
         let playerNumber = 'player'
         for (let i = 1; i <= 4; i++) {
             if (room[`player${i}`] === socketId) {
-                playerNumber += i
-                break
+                playerNumber += i;
+                room[`player${i}`] = null;
+                break;
             }
         }
 
@@ -153,16 +151,21 @@ const leaveRoom = (socket) => {
             match.message = `O jogador ${game.players[socketId].name} desconectou`
         }
 
+        console.log(`Players in room ${roomId}: ${room.player1} ${room.player2} ${room.player3} ${room.player4}`);
+
         if (!room.player1 && !room.player2 && !room.player3 && !room.player4) {
-            delete game.rooms[socketId]
+            delete game.rooms[roomId]
             if (match) {
                 delete game.match[roomId]
+                console.log(`Room ${roomId} deleted`);
             }
         }
 
         refreshMatch(roomId)
+        socket.leave(roomId)
     }
 }
+
 
 const sendMessage = (player, message) => {
     sockets.emit("ReceiveMessage", `${player.name}: ${message}`)
@@ -185,7 +188,6 @@ const refreshReadyPlayers = (contador) => {
 }
 
 const everyoneIsReady = () => {
-    console.log("Deu true")
     sockets.emit("EveryoneIsReady", true)
 }
 
