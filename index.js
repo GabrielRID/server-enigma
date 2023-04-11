@@ -129,11 +129,32 @@ sockets.on('connection', (socket) => {
     // Verificação de palavra
     socket.on('VerifyWord', (obj) => {
         if(obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
+            console.log('voce venceu, vermelho!')
+            finishGame(true)
+        } else if(obj.color === 'Azul' && obj.word.toLowerCase().trim() === words[1]) {
+            console.log('voce venceu, azul!')
+            finishGame(true)
+        } else if(obj.color === 'Amarelo' && obj.word.toLowerCase().trim() === words[2]) {
+            console.log('voce venceu, amarelo!')
+            finishGame(true)
+        } else if(obj.color === 'Verde' && obj.word.toLowerCase().trim() === words[3]) {
+            console.log('voce venceu, verde!')
             finishGame(true)
         }
     })
 
     //E pré settar a quantidade de letras
+    socket.on('SetLetters', (color) => {
+        if(color === 'Vermelho') {
+            sizeWord(words[0].length)
+        } else if(color === 'Azul') {
+            sizeWord(words[1].length)
+        } else if(color === 'Amarelo') {
+            sizeWord(words[2].length)
+        } else if(color === 'Verde') {
+            sizeWord(words[3].length)
+        }
+    })
 
 })
 
@@ -185,6 +206,10 @@ const sendMessage = (player, message) => {
 
 const finishGame = (bool) => {
     sockets.emit("FinishGame", bool)
+}
+
+const sizeWord = (size) => {
+    sockets.emit("VerifySizeLetter", size)
 }
 
 const refreshPlayers = () => {
