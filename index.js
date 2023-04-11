@@ -109,7 +109,7 @@ sockets.on('connection', (socket) => {
                 time: 1200
             }
             console.log("O jogo vai começar")
-            gameInProgress(true, roomId)
+            gameInProgress(true)
         }
 
         console.log(`${game.players[socket.id].name} entrou na sala`)
@@ -232,8 +232,8 @@ const everyoneIsReady = () => {
     sockets.emit("EveryoneIsReady", true)
 }
 
-const gameInProgress = (bool, roomId) => {
-    sockets.emit("GameInProcess", (bool, roomId))
+const gameInProgress = (bool) => {
+    sockets.emit("GameInProcess", bool)
 }
 
 app.get("/", (req, res) => res.json({
