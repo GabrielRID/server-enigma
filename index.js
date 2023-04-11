@@ -128,9 +128,7 @@ sockets.on('connection', (socket) => {
 
     // Verificação de palavra
     socket.on('VerifyWord', (obj) => {
-        console.log("você entrou!")
         if(obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
-            console.log("você venceu!")
             finishGame(true)
         }
     })
