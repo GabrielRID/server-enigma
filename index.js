@@ -23,6 +23,9 @@ const game = {
 // Vai ser retirado posteriormente e colocado dentro das rooms, pois é lá que as validações devem ser feitas
 let contador = 0
 
+// Criar uma lista de palavras para verificar o player
+const words = ['passado', 'fuga', 'segredo', 'morte']
+
 // Aqui é onde vai ser elaborado a parte de código de enviar e receber no servidor
 sockets.on('connection', (socket) => {
     console.log(`${socket.id} conectado`)
@@ -123,6 +126,17 @@ sockets.on('connection', (socket) => {
         } 
     })
 
+    // Verificação de palavra
+    socket.on('VerifyWord', (obj) => {
+        console.log("você entrou!")
+        if(obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
+            console.log("você venceu!")
+            finishGame(true)
+        }
+    })
+
+    //E pré settar a quantidade de letras
+
 })
 
 // Essa função ira retirar o usuário da sala
@@ -169,6 +183,10 @@ const leaveRoom = (socket) => {
 
 const sendMessage = (player, message) => {
     sockets.emit("ReceiveMessage", `${player.name}: ${message}`)
+}
+
+const finishGame = (bool) => {
+    sockets.emit("FinishGame", bool)
 }
 
 const refreshPlayers = () => {
