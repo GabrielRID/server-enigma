@@ -117,27 +117,27 @@ sockets.on('connection', (socket) => {
 
     socket.on('ReadyPlayer', () => {
         contador++;
-        if(contador < 4) {
+        if (contador < 4) {
             refreshReadyPlayers(contador)
         } else if (contador === 4) {
-            contador=0
+            contador = 0
             console.log("Começou o jogo")
             everyoneIsReady()
-        } 
+        }
     })
 
     // Verificação de palavra
     socket.on('VerifyWord', (obj) => {
-        if(obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
+        if (obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
             console.log('voce venceu, vermelho!')
             finishGame(true)
-        } else if(obj.color === 'Azul' && obj.word.toLowerCase().trim() === words[1]) {
+        } else if (obj.color === 'Azul' && obj.word.toLowerCase().trim() === words[1]) {
             console.log('voce venceu, azul!')
             finishGame(true)
-        } else if(obj.color === 'Amarelo' && obj.word.toLowerCase().trim() === words[2]) {
+        } else if (obj.color === 'Amarelo' && obj.word.toLowerCase().trim() === words[2]) {
             console.log('voce venceu, amarelo!')
             finishGame(true)
-        } else if(obj.color === 'Verde' && obj.word.toLowerCase().trim() === words[3]) {
+        } else if (obj.color === 'Verde' && obj.word.toLowerCase().trim() === words[3]) {
             console.log('voce venceu, verde!')
             finishGame(true)
         }
@@ -145,13 +145,13 @@ sockets.on('connection', (socket) => {
 
     //E pré settar a quantidade de letras
     socket.on('SetLetters', (color) => {
-        if(color === 'Vermelho') {
+        if (color === 'Vermelho') {
             sizeWord(words[0].length)
-        } else if(color === 'Azul') {
+        } else if (color === 'Azul') {
             sizeWord(words[1].length)
-        } else if(color === 'Amarelo') {
+        } else if (color === 'Amarelo') {
             sizeWord(words[2].length)
-        } else if(color === 'Verde') {
+        } else if (color === 'Verde') {
             sizeWord(words[3].length)
         }
     })
@@ -240,6 +240,12 @@ app.get("/", (req, res) => res.json({
     sucess: true,
     message: 'Sucesso'
 }))
+
+app.get('/jogador/:id', function (req, res) {
+    const jogadorId = req.params.id;
+    // aqui você pode usar o ID do jogador para carregar dados específicos do jogador
+    // e renderizar uma página personalizada para ele
+});
 
 const port = 4000
 server.listen(process.env.PORT || port, () => console.log(`Server rodando na porta ${port}`))
