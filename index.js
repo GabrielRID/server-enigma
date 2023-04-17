@@ -156,6 +156,10 @@ sockets.on('connection', (socket) => {
         }
     })
 
+    socket.on("TimerGame", (match) => {
+        
+    })
+
 })
 
 // Essa função ira retirar o usuário da sala
