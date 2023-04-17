@@ -109,6 +109,7 @@ sockets.on('connection', (socket) => {
                 time: 1200
             }
             console.log("O jogo vai começar")
+            refreshMatch()
             gameInProgress(true)
         }
 
@@ -221,6 +222,7 @@ const refreshRooms = () => {
 }
 
 const refreshMatch = (roomId) => {
+    console.log(game.match[roomId])
     sockets.to(roomId).emit('MatchRefresh', game.match[roomId] || {})
 }
 
