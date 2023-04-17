@@ -159,12 +159,15 @@ sockets.on('connection', (socket) => {
     socket.on("TimerGame", (match) => {
         const gameTimer = setInterval(() => {
 
-            let minutes = Math.floor(match.time / 60)
-            let seconds = match.time % 60
-
-            match.time--;
-            timerInProgress(Math.floor(match.time / 60) + ":" + (match.time % 60 < 10 ? "0" : "") + match.time % 60)
-
+            if(match.time > 0) {
+                let minutes = Math.floor(match.time / 60)
+                let seconds = match.time % 60
+                match.time--;
+                timerInProgress(minutes + ":" + (seconds < 10 ? "0" : "") + seconds)
+            } else {
+                console.log("Tempo acabou")
+                clearInterval(gameTimer)
+            }
             // console.log(Math.floor(fullTime / 60) + ":" + (fullTime % 60 < 10 ? "0" : "") + fullTime % 60)
 
         }, 1000)
