@@ -157,7 +157,17 @@ sockets.on('connection', (socket) => {
     })
 
     socket.on("TimerGame", (match) => {
-        
+        const gameTimer = setInterval(() => {
+
+            let minutes = Math.floor(match.time / 60)
+            let seconds = match.time % 60
+
+            match.time--;
+            timerInProgress(Math.floor(match.time / 60) + ":" + (match.time % 60 < 10 ? "0" : "") + match.time % 60)
+
+            // console.log(Math.floor(fullTime / 60) + ":" + (fullTime % 60 < 10 ? "0" : "") + fullTime % 60)
+
+        }, 1000)
     })
 
 })
@@ -238,6 +248,10 @@ const everyoneIsReady = () => {
 
 const gameInProgress = (bool) => {
     sockets.emit("GameInProcess", bool)
+}
+
+const timerInProgress = (strTimer) => {
+    sockets.emit("TimerInProgress", strTimer)
 }
 
 app.get("/", (req, res) => res.json({
