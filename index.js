@@ -108,8 +108,7 @@ sockets.on('connection', (socket) => {
                 },
                 time: 1200
             }
-            console.log("O jogo vai começar")
-            refreshMatch()
+            refreshMatch(roomId)
             gameInProgress(true)
         }
 
@@ -222,7 +221,6 @@ const refreshRooms = () => {
 }
 
 const refreshMatch = (roomId) => {
-    console.log(game.match[roomId])
     sockets.to(roomId).emit('MatchRefresh', game.match[roomId] || {})
 }
 
@@ -242,12 +240,6 @@ app.get("/", (req, res) => res.json({
     sucess: true,
     message: 'Sucesso'
 }))
-
-app.get('/jogador/:id', function (req, res) {
-    const jogadorId = req.params.id;
-    // aqui você pode usar o ID do jogador para carregar dados específicos do jogador
-    // e renderizar uma página personalizada para ele
-});
 
 const port = 4000
 server.listen(process.env.PORT || port, () => console.log(`Server rodando na porta ${port}`))
