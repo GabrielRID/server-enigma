@@ -88,25 +88,18 @@ sockets.on('connection', (socket) => {
             game.match[roomId] = {
                 player1: {
                     ready: false,
-                    score: 2000,
-                    color: ''
                 },
                 player2: {
                     ready: false,
-                    score: 2000,
-                    color: ''
                 },
                 player3: {
                     ready: false,
-                    score: 2000,
-                    color: ''
                 },
                 player4: {
                     ready: false,
-                    score: 2000,
-                    color: ''
                 },
-                time: 1200
+                time: 1200,
+                punctuation: 2000
             }
             refreshMatch(roomId)
             gameInProgress(true)
@@ -160,15 +153,18 @@ sockets.on('connection', (socket) => {
         const gameTimer = setInterval(() => {
 
             if(match.time > 0) {
+                match.time--;
                 let minutes = Math.floor(match.time / 60)
                 let seconds = match.time % 60
-                match.time--;
-                timerInProgress(minutes + ":" + (seconds < 10 ? "0" : "") + seconds)
+                timerInProgress((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds)
+                if(match.time % 30 === 0 && !(match.time === 1200)) {
+                    match.punctuation -= 50
+                }
+                updatePunctuation(match.punctuation)
             } else {
                 console.log("Tempo acabou")
                 clearInterval(gameTimer)
             }
-            // console.log(Math.floor(fullTime / 60) + ":" + (fullTime % 60 < 10 ? "0" : "") + fullTime % 60)
 
         }, 1000)
     })
@@ -255,6 +251,10 @@ const gameInProgress = (bool) => {
 
 const timerInProgress = (strTimer) => {
     sockets.emit("TimerInProgress", strTimer)
+}
+
+const updatePunctuation = (punctuation) => {
+    sockets.emit("UpdatePunctuation", punctuation)
 }
 
 app.get("/", (req, res) => res.json({
