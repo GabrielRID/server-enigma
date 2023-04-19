@@ -123,16 +123,16 @@ sockets.on('connection', (socket) => {
     socket.on('VerifyWord', (obj) => {
         if (obj.color === 'Vermelho' && obj.word.toLowerCase().trim() === words[0]) {
             console.log('voce venceu, vermelho!')
-            finishGame(true)
+            finishGame(true, obj.color)
         } else if (obj.color === 'Azul' && obj.word.toLowerCase().trim() === words[1]) {
             console.log('voce venceu, azul!')
-            finishGame(true)
+            finishGame(true, obj.color)
         } else if (obj.color === 'Amarelo' && obj.word.toLowerCase().trim() === words[2]) {
             console.log('voce venceu, amarelo!')
-            finishGame(true)
+            finishGame(true, obj.color)
         } else if (obj.color === 'Verde' && obj.word.toLowerCase().trim() === words[3]) {
             console.log('voce venceu, verde!')
-            finishGame(true)
+            finishGame(true, obj.color)
         }
     })
 
@@ -161,7 +161,7 @@ sockets.on('connection', (socket) => {
                     match.punctuation -= 50
                 }
                 updatePunctuation(match.punctuation)
-            } else {
+            } else if(match.time === 0) {
                 console.log("Tempo acabou")
                 clearInterval(gameTimer)
             }
@@ -217,8 +217,8 @@ const sendMessage = (player, message) => {
     sockets.emit("ReceiveMessage", `${player.name}: ${message}`)
 }
 
-const finishGame = (bool) => {
-    sockets.emit("FinishGame", bool)
+const finishGame = (bool, color) => {
+    sockets.emit("FinishGame", {bool, color})
 }
 
 const sizeWord = (size) => {
