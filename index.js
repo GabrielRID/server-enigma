@@ -26,6 +26,9 @@ let contador = 0
 // Criar uma lista de palavras para verificar o player
 const words = ['passado', 'fuga', 'segredo', 'morte']
 
+// Ranking
+let ranking = []
+
 // Aqui é onde vai ser elaborado a parte de código de enviar e receber no servidor
 sockets.on('connection', (socket) => {
     console.log(`${socket.id} conectado`)
@@ -169,6 +172,12 @@ sockets.on('connection', (socket) => {
         }, 1000)
     })
 
+    socket.on("SendResultRanking", (player) => {
+        ranking.push(player)
+        ranking.sort((player_1, player_2) => player_2.time - player_1.time)
+        updateRanking(ranking)
+    })
+
 })
 
 // Essa função ira retirar o usuário da sala
@@ -257,6 +266,11 @@ const updatePunctuation = (punctuation) => {
     sockets.emit("UpdatePunctuation", punctuation)
 }
 
+const updateRanking = (ranking) => {
+    console.log("Entrei aqui")
+    sockets.emit("UpdateRanking", ranking)
+}
+
 app.get("/", (req, res) => res.json({
     sucess: true,
     message: 'Sucesso'
@@ -264,5 +278,3 @@ app.get("/", (req, res) => res.json({
 
 const port = 4000
 server.listen(process.env.PORT || port, () => console.log(`Server rodando na porta ${port}`))
-
-
