@@ -172,13 +172,21 @@ sockets.on('connection', (socket) => {
         }, 1000)
     })
 
-    socket.on("SendResultRanking", (player) => {
-        const bool = ranking.includes(player)
-        console.log(bool)
-        if (!bool) {
-            ranking.push(player)
+    socket.on("SendResultRanking", (playerAux) => {
+        let bool = false;
+
+        for(let i = 0; i < ranking.length; i++) {
+            if(playerAux.color === ranking[i].color) {
+                bool = true
+                break
+            }
         }
-        console.log("Aqui estou denovo")
+
+        if (!bool) {
+            ranking.push(playerAux)
+        }
+
+        ranking.sort((a, b) => b.time - a.time)
         updateRanking(ranking)
     })
 
@@ -271,7 +279,6 @@ const updatePunctuation = (punctuation) => {
 }
 
 const updateRanking = (ranking) => {
-    console.log("Entrei aqui")
     sockets.emit("UpdateRanking", ranking)
 }
 
