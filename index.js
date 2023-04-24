@@ -27,7 +27,7 @@ let contador = 0
 const words = ['passado', 'fuga', 'segredo', 'morte']
 
 // Ranking
-let ranking = []
+const ranking = []
 
 // Aqui é onde vai ser elaborado a parte de código de enviar e receber no servidor
 sockets.on('connection', (socket) => {
@@ -155,16 +155,16 @@ sockets.on('connection', (socket) => {
     socket.on("TimerGame", (match) => {
         const gameTimer = setInterval(() => {
 
-            if(match.time > 0) {
+            if (match.time > 0) {
                 match.time--;
                 let minutes = Math.floor(match.time / 60)
                 let seconds = match.time % 60
                 timerInProgress((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds)
-                if(match.time % 30 === 0 && !(match.time === 1200)) {
+                if (match.time % 30 === 0 && !(match.time === 1200)) {
                     match.punctuation -= 50
                 }
                 updatePunctuation(match.punctuation)
-            } else if(match.time === 0) {
+            } else if (match.time === 0) {
                 console.log("Tempo acabou")
                 clearInterval(gameTimer)
             }
@@ -173,8 +173,12 @@ sockets.on('connection', (socket) => {
     })
 
     socket.on("SendResultRanking", (player) => {
-        ranking.push(player)
-        ranking.sort((player_1, player_2) => player_2.time - player_1.time)
+        const bool = ranking.includes(player)
+        console.log(bool)
+        if (!bool) {
+            ranking.push(player)
+        }
+        console.log("Aqui estou denovo")
         updateRanking(ranking)
     })
 
@@ -227,7 +231,7 @@ const sendMessage = (player, message) => {
 }
 
 const finishGame = (bool, color) => {
-    sockets.emit("FinishGame", {bool, color})
+    sockets.emit("FinishGame", { bool, color })
 }
 
 const sizeWord = (size) => {
