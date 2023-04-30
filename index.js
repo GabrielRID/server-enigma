@@ -111,6 +111,7 @@ sockets.on('connection', (socket) => {
         console.log(`${game.players[socket.id].name} entrou na sala`)
     })
 
+    // Verifica se todos os jogadores estão prontos para começar
     socket.on('ReadyPlayer', () => {
         contador++;
         if (contador < 4) {
@@ -152,6 +153,7 @@ sockets.on('connection', (socket) => {
         }
     })
 
+    // Tempo de jogo
     socket.on("TimerGame", (match) => {
         const gameTimer = setInterval(() => {
 
@@ -162,6 +164,9 @@ sockets.on('connection', (socket) => {
                 timerInProgress((minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds)
                 if (match.time % 30 === 0 && !(match.time === 1200)) {
                     match.punctuation -= 50
+                }
+                if(match.time <= 600) {
+                    showTip(true)
                 }
                 updatePunctuation(match.punctuation)
             } else if (match.time === 0) {
@@ -280,6 +285,10 @@ const updatePunctuation = (punctuation) => {
 
 const updateRanking = (ranking) => {
     sockets.emit("UpdateRanking", ranking)
+}
+
+const showTip = (bool) => {
+    sockets.emit("ShowTip", bool)
 }
 
 app.get("/", (req, res) => res.json({
