@@ -101,7 +101,7 @@ sockets.on('connection', (socket) => {
                 player4: {
                     ready: false,
                 },
-                time: 10,
+                time: 1200,
                 punctuation: 2000
             }
             refreshMatch(roomId)
