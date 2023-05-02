@@ -101,7 +101,7 @@ sockets.on('connection', (socket) => {
                 player4: {
                     ready: false,
                 },
-                time: 1200,
+                time: 10,
                 punctuation: 2000
             }
             refreshMatch(roomId)
@@ -143,6 +143,8 @@ sockets.on('connection', (socket) => {
         } else if (obj.color === 'Verde' && obj.word.toLowerCase().trim() === words[3]) {
             console.log('voce venceu, verde!')
             finishGame(true, obj.color)
+        } else {
+            finishGame(false, obj.color)
         }
     })
 
