@@ -112,11 +112,11 @@ sockets.on('connection', (socket) => {
     })
 
     // Verifica se todos os jogadores estão prontos para começar
-    socket.on('ReadyPlayer', () => {
-        if (contador < 4) {
+    socket.on('ReadyPlayer', (bool) => {
+        if (contador < 4 && bool) {
             contador++;
             refreshReadyPlayers(contador)
-        } else if (contador === 4) {
+        } else if (contador === 4 || !bool) {
             everyoneIsReady()
         }
     })
