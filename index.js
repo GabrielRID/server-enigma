@@ -113,19 +113,11 @@ sockets.on('connection', (socket) => {
 
     // Verifica se todos os jogadores estão prontos para começar
     socket.on('ReadyPlayer', () => {
-        contador++;
         if (contador < 4) {
+            contador++;
             refreshReadyPlayers(contador)
         } else if (contador === 4) {
-            contador = 0
             everyoneIsReady()
-        }
-    })
-
-    socket.on('WaitingPlayers', () => {
-        contador++
-        if (contador === 4) {
-            showRanking(true)
         }
     })
 
@@ -297,14 +289,6 @@ const updateRanking = (ranking) => {
 
 const showTip = (bool) => {
     sockets.emit("ShowTip", bool)
-}
-
-const waitingPlayers = (contador) => {
-    sockets.emit("AmountWaitingPlayers", contador)
-}
-
-const showRanking = (bool) => {
-    sockets.emit("ShowRanking", bool)
 }
 
 app.get("/", (req, res) => res.json({
