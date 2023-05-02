@@ -118,8 +118,14 @@ sockets.on('connection', (socket) => {
             refreshReadyPlayers(contador)
         } else if (contador === 4) {
             contador = 0
-            console.log("Começou o jogo")
             everyoneIsReady()
+        }
+    })
+
+    socket.on('WaitingPlayers', () => {
+        contador++
+        if (contador === 4) {
+            showRanking(true)
         }
     })
 
@@ -165,7 +171,7 @@ sockets.on('connection', (socket) => {
                 if (match.time % 30 === 0 && !(match.time === 1200)) {
                     match.punctuation -= 50
                 }
-                if(match.time <= 600) {
+                if (match.time <= 600) {
                     showTip(true)
                 }
                 updatePunctuation(match.punctuation)
@@ -180,8 +186,8 @@ sockets.on('connection', (socket) => {
     socket.on("SendResultRanking", (playerAux) => {
         let bool = false;
 
-        for(let i = 0; i < ranking.length; i++) {
-            if(playerAux.color === ranking[i].color) {
+        for (let i = 0; i < ranking.length; i++) {
+            if (playerAux.color === ranking[i].color) {
                 bool = true
                 break
             }
@@ -289,6 +295,14 @@ const updateRanking = (ranking) => {
 
 const showTip = (bool) => {
     sockets.emit("ShowTip", bool)
+}
+
+const waitingPlayers = (contador) => {
+    sockets.emit("AmountWaitingPlayers", contador)
+}
+
+const showRanking = (bool) => {
+    sockets.emit("ShowRanking", bool)
 }
 
 app.get("/", (req, res) => res.json({
