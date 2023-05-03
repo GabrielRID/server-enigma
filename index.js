@@ -116,8 +116,9 @@ sockets.on('connection', (socket) => {
         if (contador < 4 && bool) {
             contador++;
             refreshReadyPlayers(contador)
-        } else if ((contador === 4) || (contador === 4 && !bool)) {
+        } else if ((contador === 4) || !bool) {
             console.log("Vim pelo home")
+            contador = 0
             everyoneIsReady()
         }
     })
