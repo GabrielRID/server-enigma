@@ -116,9 +116,7 @@ sockets.on('connection', (socket) => {
         if (contador < 4 && bool) {
             contador++;
             refreshReadyPlayers(contador)
-        } else if ((contador === 4) || !bool) {
-            console.log("Vim pelo home")
-            contador = 0
+        } else if ((contador === 4) && !bool) {
             everyoneIsReady()
         }
     })
@@ -239,7 +237,6 @@ const leaveRoom = (socket) => {
         socket.leave(roomId)
     }
 }
-
 
 const sendMessage = (player, message) => {
     sockets.emit("ReceiveMessage", `${player.name}: ${message}`)
