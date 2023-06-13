@@ -58,7 +58,7 @@ sockets.on('connection', (socket) => {
             player4: undefined
         }
 
-        // game.players[socket.id].room = socket.id
+        game.players[socket.id].room = socket.id
 
         refreshPlayers()
         refreshRooms()
