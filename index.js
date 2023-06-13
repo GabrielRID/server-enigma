@@ -20,7 +20,6 @@ const game = {
     match: {}
 }
 
-// Vai ser retirado posteriormente e colocado dentro das rooms, pois é lá que as validações devem ser feitas
 let contador = 0
 
 // Criar uma lista de palavras para verificar o player
@@ -57,16 +56,16 @@ sockets.on('connection', (socket) => {
             player2: undefined,
             player3: undefined,
             player4: undefined
-            // player5: undefined,
         }
 
-        game.players[socket.id].room = socket.id
+        // game.players[socket.id].room = socket.id
 
         refreshPlayers()
         refreshRooms()
         console.log(`Sala ${socket.id} criada`)
     })
 
+    // Sair da sala
     socket.on('LeaveRoom', () => {
         leaveRoom(socket)
 
@@ -74,6 +73,7 @@ sockets.on('connection', (socket) => {
         refreshRooms()
     })
 
+    // Entrar na sala
     socket.on('JoinRoom', (roomId) => {
         socket.join(roomId)
         const room = game.rooms[roomId]
@@ -113,7 +113,7 @@ sockets.on('connection', (socket) => {
 
     // Verifica se todos os jogadores estão prontos para começar
     socket.on('ReadyPlayer', (bool) => {
-        if (contador < 4 && bool) {
+        if (contador > 4 && bool) {
             contador++;
             refreshReadyPlayers(contador)
         } else if ((contador === 4) && !bool) {
@@ -153,7 +153,7 @@ sockets.on('connection', (socket) => {
         }
     })
 
-    // Tempo de jogo
+    // Tempo de jogo e pontuação
     socket.on("TimerGame", (match) => {
         const gameTimer = setInterval(() => {
 
@@ -168,7 +168,6 @@ sockets.on('connection', (socket) => {
                 if (match.time <= 600) {
                     showTip(true)
                 }
-                updatePunctuation(match.punctuation)
             } else if (match.time === 0) {
                 console.log("Tempo acabou")
                 clearInterval(gameTimer)
@@ -176,6 +175,7 @@ sockets.on('connection', (socket) => {
 
         }, 1000)
     })
+
 
     socket.on("SendResultRanking", (playerAux) => {
         let bool = false;
@@ -192,12 +192,11 @@ sockets.on('connection', (socket) => {
         }
 
         ranking.sort((a, b) => b.time - a.time)
-        updateRanking(ranking)
     })
 
 })
 
-// Essa função ira retirar o usuário da sala
+// Essa função ira retirar o usuário da sala (não funciona essa função)
 const leaveRoom = (socket) => {
     const socketId = socket.id
     const roomId = game.rooms[socketId].room
@@ -267,7 +266,7 @@ const refreshReadyPlayers = (contador) => {
 }
 
 const everyoneIsReady = () => {
-    sockets.emit("EveryoneIsReady", true)
+    sockets.emit("EveryoneIReady", true)
 }
 
 const gameInProgress = (bool) => {
